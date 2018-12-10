@@ -1,22 +1,29 @@
 #encoding=utf-8
-from scripy_img import
+from tools import check_url, filterImageUrls, downloadImages
+
+
 def application(environ, start_response):
-    print(environ)
-    if environ.PATH_INFO == r'/':
-        status = '200 OK'  # HTTP Status
-        headers = [('Content-type', 'text/plain')]  # HTTP Headers
-        start_response(status, headers)
+    request_path = environ.get('PATH_INFO')
+    if environ['REQUEST_METHOD'] == 'GET' and request_path in [r'/', r'/home']:
+        # 响应
+        start_response('200 OK', [('Content-Type', 'text/html')])
+        file_content = 'empty'
+        with open('./homepage.html', 'rb') as f:
+            file_content = f.read()
+            print(file_content)
+        return [file_content]
 
-        return "Hello World"
 
-    start_response('200 OK', [('Content-Type', 'application/zip, application/octet-stream'),
-                              ('Content-Disposition', 'attachment;filename=file.zip')])
-    # return ["Hello World".encode("utf-8")]
-    result = ''
-    try:
-        with open('./server.zip', 'rb') as f:
-            result = f.read()
-    except Exception:
-        result = ['ERROR']
+    elif request_path == r'/download-img':
+        start_response('200 OK', [('Content-Type', 'application/zip, application/octet-stream'),
+                                  ('Content-Disposition', 'attachment;filename=file.zip')])
 
-    return result
+        return "12123";
+
+        try:
+            with open('./server.zip', 'rb') as f:
+                result = f.read()
+        except Exception:
+            result = ['ERROR']
+
+        return result
