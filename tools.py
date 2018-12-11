@@ -63,12 +63,12 @@ def downloadImages(dirname, img_src_list):
             image = open(file_path, 'wb')
             image.write(data)
             image.close()
-            print index
+            print 'image index: %s is downloaded' % index
 
         except Exception, e:
             print "**** ERROR ****"
             print index, img_src
 
-    print u'下载图片完成，按Enter键退出！'
+    return 'picture download finished!<br/> "%s" pictures are downloaded' % len(img_src_list)
 
 

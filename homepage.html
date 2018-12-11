@@ -13,14 +13,13 @@
         padding: 0;
     }
     .container {
-        width: 600px;
+        width: 800px;
         margin: 5em auto;
         padding: 50px;
         background-color: #fff;
         border-radius: 1em;
         text-align:left;
         box-sizing:border-box;
-        margin:20px;
     }
     .title{
         font-size:16px;
@@ -39,29 +38,45 @@
         padding:3px 6px;
     }
 
+    #resultBox{
+        margin-top:20px;
+    }
+
+
     </style>
 </head>
 
 <body>
 <div class="container">
     <div class="title">please paste your url</div>
-    <input type="text" id="urlOrigin" class="url-origin"/><br/><br/>
+    <input type="text" id="urlOrigin" class="url-origin" value="https://www.justeasy.cn/works/case/7443.html"/><br/><br/>
     <span class="submit-button" id="submitButton"> start download </span>
+
+    <div id="resultBox"></div>
 </div>
-<script src="./libs/jq_min.js"></script>
+<script src="/libs/jq_min.js"></script>
 <script>
     window.onload=function(){
-        document.getElementById('submitButton').onclick = function(){
+        $('#submitButton').click(function(){
             var source_url = $('#urlOrigin').val();
             if(judgeSourceUrl(source_url)){
-                source_url = encodeURIComponent(source_url).trim();
                 $.ajax({url:"/download-img",
-                success:function(result){
-                    console.log(result)
+                    data:{source_url: source_url, type:'download'},
+                    success:function(result){
+                        result = JSON.parse(result);
+                        console.log(result);
+                        $('#resultBox').html('');
+                        if(result['retcode'] === 'SUCC'){
+                            $('#resultBox').append($('<div>********** result ************</div>'))
+                                .append($('<div>describe:  '+ result['describe'] + '</div>'))
+                                .append($('<div>img dir:  '+ result['dirname'] + '</div>'))
+                        }else{
+                             $('#resultBox').append($('<div>describe:  '+ result['describe'] + '</div>'))
+                        }
                 }});
             }
-        }
-    }
+        })
+    };
 
     function judgeSourceUrl(source_url){
          source_url = source_url.trim();
