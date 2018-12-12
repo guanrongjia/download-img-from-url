@@ -25,8 +25,12 @@ you will get an return result from the server,
 enjoy coding!
 
 tip:
-some ability i referred , is in hello.py
-you can read the annotate and code to learn.
+some ability i referred ,but not used in the homepage,
+you can send request to try the interface,
+there are a lot of the annotate in the .py.
+the code is simple and easy to read.
+if there is any questions ,get communicate with me by email:
+15261066994tel@gmail.com
 
 #####################################################
 
@@ -35,5 +39,13 @@ you can read the annotate and code to learn.
 可能没人深入的用过这个东西吧。
 
 所以我写了这样一个小工程，
-里面包括 请求html， 加载css、js文件，以及文件下载（可以设置文件名）等功能
+里面包括 请求
+get请求， ajax请求， css、js文件的加载， 以及文件下载（可以设置文件名）等功能。
 具体的，看 hello.py 的代码就好了，上面有注释。
+
+用 python server.py 启动在本地启动一个web服务，
+然后输入localhost:8000，进入页面，然后，愉快的使用吧。
+有些功能外我提供了接口，但是我并没有在页面调用，如果想尝试，自己请求下连接就好了。
+有什么问题，可以跟我留言。
+15261066994tel@gmail.com
+
