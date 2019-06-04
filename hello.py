@@ -44,8 +44,8 @@ def application(environ, start_response):
         source_url = query_arg_dict.get('source_url')
         source_url = urllib.unquote(source_url)
         if check_url(source_url):
-            dirname, img_src_list = filterImageUrls(source_url)
-            result_str = downloadImages(dirname, img_src_list)
+            dirname, img_objs = filterImageUrls(source_url)
+            result_str = downloadImages(dirname, img_objs)
             result_json = {
                 'retcode' : 'SUCC',
                 'describe': result_str,

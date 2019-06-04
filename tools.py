@@ -4,6 +4,8 @@ import os
 import re
 import sys
 import time
+import json
+import traceback
 from bs4 import BeautifulSoup
 
 ##################### 1、check URL #########################
@@ -37,28 +39,32 @@ def filterImageUrls(source_url):
     html_doc = req.read()
     soup = BeautifulSoup(html_doc)
     div_html = soup.find_all("img")
-    img_src_list = []
+    img_objs = []
 
     for one_img_attr in div_html:
         # we user data-original here ,for the image is lazy loading.
         # the value of key data-original is where the real url lives
-        data_original = one_img_attr.attrs.get('data-original')
-        if data_original:
-            img_src_list.append(data_original)
+        img_src = one_img_attr.attrs.get('data-original') or one_img_attr.attrs.get('src')
+        img_name = one_img_attr.attrs.get('alt') or one_img_attr.attrs.get('title') or ''
+        if img_src:
+            img_objs.append({'img_src': img_src, 'img_name': img_name})
 
-    return dirname, img_src_list
+
+    return dirname, img_objs
 
 
 ##################### 3、download image #########################
-def downloadImages(dirname, img_src_list):
+def downloadImages(dirname, img_objs):
     timestamp = str(int(time.time()))
-    for index, img_src in enumerate(img_src_list):
+    for index, img_obj in enumerate(img_objs):
         try:
-            data = urllib2.urlopen(img_src).read()
+            img_src = img_obj.get('img_src')
+            img_name = img_obj.get('img_name')
+            data = urllib2.urlopen(img_obj.get('img_src'), timeout=20).read()
             ext = os.path.splitext(img_src)[-1]
             ext = ext.split('!')[0]
             ext = ext.split('@')[0]
-            file_name = timestamp + '_' + str(index) + ext
+            file_name = (img_name or timestamp + '_' + str(index)) + ext
             file_path = os.path.join(dirname, file_name)
             image = open(file_path, 'wb')
             image.write(data)
@@ -66,9 +72,11 @@ def downloadImages(dirname, img_src_list):
             print 'image index: %s is downloaded' % index
 
         except Exception, e:
-            print "**** ERROR ****"
-            print index, img_src
+            print "******************** ERROR ********************"
+            print index, json.dumps(img_obj, ensure_ascii=False)
+            print "****************"
+            print(traceback.format_exc())
 
-    return 'picture download finished!<br/> "%s" pictures are downloaded' % len(img_src_list)
+    return 'picture download finished!<br/> "%s" pictures are downloaded' % len(img_objs)
 
 
