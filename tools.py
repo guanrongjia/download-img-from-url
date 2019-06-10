@@ -59,8 +59,9 @@ def downloadImages(dirname, img_objs):
     for index, img_obj in enumerate(img_objs):
         try:
             img_src = img_obj.get('img_src')
+            img_src = img_src.replace('-228x228.jpg', '-600x600.jpg')
             img_name = img_obj.get('img_name')
-            data = urllib2.urlopen(img_obj.get('img_src'), timeout=20).read()
+            data = urllib2.urlopen(img_src, timeout=25).read()
             ext = os.path.splitext(img_src)[-1]
             ext = ext.split('!')[0]
             ext = ext.split('@')[0]
